@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
-    const { reg_number, unit_code, exam_type, group } = req.body;
+    const { reg_number, unit_code, group } = req.body;
 
     // Get unit details from timetable
     const [unitRows] = await db.query(
@@ -32,9 +32,9 @@ router.post("/", async (req, res) => {
     // Insert the registration
     await db.query(
       `INSERT INTO registered_courses
-       (reg_number, unit_code, unit_name, exam_type, \`group\`, lecturer)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [reg_number, unit_code, unit_name, exam_type, group, lecturer]
+       (reg_number, unit_code, unit_name, \`group\`, lecturer)
+       VALUES (?, ?, ?, ?, ?)`,
+      [reg_number, unit_code, unit_name, group, lecturer]
     );
 
     return res.status(200).json({ message: "Unit registered successfully" });

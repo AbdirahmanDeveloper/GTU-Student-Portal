@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import db from "./config/db.js";
 import dotenv from "dotenv";
-import authRoute from "./student-routes/authRoute.js";
+import StudentAuthRoute from "./student-routes/authRoute.js";
 import timetablesRoute from "./student-routes/timetablesRoute.js";
 import feesRoute from "./student-routes/feesRoute.js";
 import resultRoute from "./student-routes/resultsRoute.js";
@@ -14,6 +14,7 @@ import studentRoute from "./admin-routes/studentsRoute.js";
 import insertResultsRoute from "./admin-routes/insertResultsRoute.js";
 import updateRequest from "./admin-routes/requestRoute.js";
 import coursesRoute from "./admin-routes/coursesRoute.js";
+import adminAuthRoute from "./admin-routes/authRoute.js"
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
@@ -22,7 +23,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authRoute);
+app.use("/api/student-auth", StudentAuthRoute);
 app.use("/api/timetables", timetablesRoute);
 app.use("/api/fees", feesRoute);
 app.use("/api/results", resultRoute);
@@ -34,6 +35,7 @@ app.use("/api/students", studentRoute);
 app.use("/api/insert-results", insertResultsRoute);
 app.use("/api/update-requests", updateRequest);
 app.use("/api/courses", coursesRoute);
+app.use("/api/admin-auth", adminAuthRoute);
 
 
 

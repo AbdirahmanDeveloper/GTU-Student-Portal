@@ -12,7 +12,7 @@
     <!-- ===== AUTH CHECK ===== -->
     <script>
         if (!localStorage.getItem("loggedInUser")) {
-          window.location.href = "/frontend/authentication/login.html";
+          window.location.href = "/frontend/authentication/student-auth/student-login.html";
         }
     </script>
 </head>
@@ -20,22 +20,23 @@
     <!-- ================= TOP BAR ================= -->
     <div class="top-bar">
         <div class="top-bar-content">
-
-            <!-- Left side -->
-            <div class="top-left">
-                © <span id="topYear"></span> Global Tech University
-            </div>
-
-            <!-- Right side -->
-            <div class="top-right">
-                <span>Working Hours: Mon–Fri 8:00 AM – 5:00 PM</span>
-                <span class="divider">|</span>
-                <span>Email: info@gtu.ac.ke</span>
-                <button id="themeToggle" class="theme-btn">🌓</button>
-            </div>
-
+      
+          <!-- Left side -->
+          <div class="top-left">
+            © <span id="topYear"></span> Global Tech University
+          </div>
+      
+          <!-- Right side -->
+          <div class="top-right">
+            <span>Working Hours: Mon–Fri 8:00 AM – 5:00 PM</span>
+            <span class="divider">|</span>
+            <span>Email: info@gtu.ac.ke</span>
+            <button id="themeToggle" class="theme-btn">🌓</button>
+          </div>
+      
         </div>
-    </div>
+      </div>
+      
 
     <script>
     // Auto update year
@@ -197,7 +198,9 @@
                 <p id="regNumber"></p>
                 <p id="studentCourse"></p>
             </div>
-
+            <div class="print-btn">
+                <a href="#" id="printFeesLink">Print Fees Statement</a>
+            </div>              
             <div class="fees-statement">
                 <table id="feesTable">
                     <h2>Online Fees Statement</h2>
@@ -245,7 +248,9 @@
                 <p id="regNumber"></p>
                 <p id="studentCourse"></p>
             </div>
-
+            <div class="print-btn">
+                <a href="#" id="printresultsLink">Print Results Slip</a>
+            </div> 
             <div class="results">
                 <h2>Results</h2>
                 <table>
@@ -275,7 +280,6 @@
                     <thead>
                         <th>Unit Code</th>
                         <th>Unit Name</th>
-                        <th>Exam Type</th>
                         <th>Group</th>
                         <th>Lecturer Name</th>
                     </thead>
@@ -292,7 +296,6 @@
                         <thead>
                             <th>Unit Code</th>
                             <th>Group</th>
-                            <th>Exam type</th>
                         </thead>
 
                         <tr>
@@ -303,14 +306,6 @@
                                     <option value="Class 2">Class 2</option>
                                     <option value="Class 3">Class 3</option>
                                     <option value="Class 4">Class 4</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="examType">
-                                    <option value="First Attempt">First Attempt</option>
-                                    <option value="Second Attempt">Second Attempt</option>
-                                    <option value="Retake">Retake</option>
-                                    <option value="Project">Project</option>
                                 </select>
                             </td>
                         </tr>
@@ -325,12 +320,40 @@
                                     <option value="Class 4">Class 4</option>
                                 </select>
                             </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="unit-code" type="text"></td>
                             <td>
-                                <select class="examType">
-                                    <option value="First Attempt">First Attempt</option>
-                                    <option value="Second Attempt">Second Attempt</option>
-                                    <option value="Retake">Retake</option>
-                                    <option value="Project">Project</option>
+                                <select class="group">
+                                    <option value="Class 1">Class 1</option>
+                                    <option value="Class 2">Class 2</option>
+                                    <option value="Class 3">Class 3</option>
+                                    <option value="Class 4">Class 4</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="unit-code" type="text"></td>
+                            <td>
+                                <select class="group">
+                                    <option value="Class 1">Class 1</option>
+                                    <option value="Class 2">Class 2</option>
+                                    <option value="Class 3">Class 3</option>
+                                    <option value="Class 4">Class 4</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><input class="unit-code" type="text"></td>
+                            <td>
+                                <select class="group">
+                                    <option value="Class 1">Class 1</option>
+                                    <option value="Class 2">Class 2</option>
+                                    <option value="Class 3">Class 3</option>
+                                    <option value="Class 4">Class 4</option>
                                 </select>
                             </td>
                         </tr>

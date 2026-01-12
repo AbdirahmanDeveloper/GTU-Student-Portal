@@ -1,4 +1,40 @@
-// ********** Sidebar logic **********
+// ******************************************//
+// ********** LOGOUT / SESSION CHECKING **********
+// ******************************************//
+function checkSessionExpiry() {
+  const loginTime = Number(localStorage.getItem("loginTime"));
+  console.log("Checking session...", loginTime, Date.now());
+
+  if (!loginTime) {
+    console.log("No login time found. Redirecting to login.");
+    window.location.href = "/frontend/authentication/admin-auth/admin-login.html";
+    return;
+  }
+
+  const oneHour = Date.now() + 60 * 60 * 1000; 
+
+  if (Date.now() - loginTime > oneHour) {
+    console.log("Session expired, logging out...");
+    alert("Session expired. You will be logged out.");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("loginTime");
+    window.location.href = "/frontend/authentication/admin-auth/admin-login.html";
+  }
+}
+
+checkSessionExpiry();
+setInterval(checkSessionExpiry, 1000);
+
+const signoutBtn = document.getElementById("signOut");
+signoutBtn.addEventListener("click", () => {
+  localStorage.removeItem("loggedInUser");
+  localStorage.removeItem("adminToken");
+  window.location.href = "/frontend/authentication/admin-auth/admin-login.html";
+});
+
+// ******************************************//
+// ********** SIDEBAR **********
+// ******************************************//
 const navBar = document.querySelector("nav");
 const navigationBtn = document.querySelector(".navigation-btn");
 navigationBtn.addEventListener("click", (e) => {
@@ -27,7 +63,9 @@ navLinks.forEach(link => {
     });
 });
 
-// ********** dropdwon logic **********
+// ******************************************//
+// ********** DROPDOWN **********
+// ******************************************//
 const dropdowns = document.querySelectorAll(".dropdown");
 
 dropdowns.forEach(drop => {
@@ -43,6 +81,9 @@ dropdowns.forEach(drop => {
     });
 });
 
+// ******************************************//
+// ********** NEW STUDENTS **********
+// ******************************************//
 const studentForm = document.querySelector(".new-student-form");
 const studentImg = document.getElementById("imageInput");
 
@@ -86,7 +127,9 @@ studentForm.addEventListener("submit", async (e) => {
 });
 
 
-
+// ******************************************//
+// ********** FEES **********
+// ******************************************//
 const feesForm = document.getElementById("fees-insert-form");
 const feesRegNumberInput = document.getElementById("fees-reg-number");
 const feesDescription = document.getElementById("description");
@@ -120,7 +163,9 @@ feesForm.addEventListener("submit", async (e) => {
         alert("failed to insert")
     }
 });
-
+// ******************************************//
+// ********** TOTAL FEES **********
+// ******************************************//
 async function fetchTotalFees() {
   try {
     const progressFill = document.querySelector(".progress-fill");
@@ -150,7 +195,9 @@ async function fetchTotalFees() {
 
 fetchTotalFees();
 
-
+// ******************************************//
+// ********** RESULTS **********
+// ******************************************//
 document.getElementById("resultsForm").addEventListener("submit", async(e) => {
     e.preventDefault();
 
@@ -180,6 +227,9 @@ document.getElementById("resultsForm").addEventListener("submit", async(e) => {
     }
 });
 
+// ******************************************//
+// ********** DISPLAY REQUESTS **********
+// ******************************************//
 async function fetchRequests(){
 
     try{
@@ -219,6 +269,9 @@ async function fetchRequests(){
 
 fetchRequests();
 
+// ******************************************//
+// ********** UPDATE REQUEST **********
+// ******************************************//
 document.getElementById("request-form").addEventListener("submit", async (e) => {
     e.preventDefault();
   
@@ -258,7 +311,9 @@ document.getElementById("request-form").addEventListener("submit", async (e) => 
     }
   });
   
-
+// ******************************************//
+// ********** DISPLAY COURSES **********
+// ******************************************//
   async function fetchCourse() {
     try {
       const tableBody = document.getElementById("courses-tBody");
@@ -293,6 +348,10 @@ document.getElementById("request-form").addEventListener("submit", async (e) => 
   }
   
   fetchCourse();
+
+// ******************************************//
+// ********** FETCH TOTAL COURSES **********
+// ******************************************//
   async function fetchTotalCourses() {
     try {
       const response = await fetch("http://localhost:5000/api/courses/total-courses");
@@ -310,6 +369,10 @@ document.getElementById("request-form").addEventListener("submit", async (e) => 
   
   fetchTotalCourses();
 
+
+// ******************************************//
+// ********** DISPLAY TIMETABLE **********
+// ******************************************//
   async function fetchTimeTable() {
 
     try{
@@ -347,6 +410,9 @@ document.getElementById("request-form").addEventListener("submit", async (e) => 
   }
   fetchTimeTable();
 
+// ******************************************//
+// ********** UPDATE TIMETABLE **********
+// ******************************************//
   document.getElementById("removeUnit").addEventListener("submit", async(e) => {
     e.preventDefault();
 
@@ -410,7 +476,9 @@ document.getElementById("request-form").addEventListener("submit", async (e) => 
     }
   })
   
-
+// ******************************************//
+// ********** DISPLAY STUDENTS **********
+// ******************************************//
   async function listStudents() {
     try{
         const response = await fetch("http://localhost:5000/api/students/list-students");
@@ -443,6 +511,10 @@ document.getElementById("request-form").addEventListener("submit", async (e) => 
     }
   }
   listStudents();
+
+// ******************************************//
+// ********** TOTAL STUDENTS **********
+// ******************************************//
   async function fetchTotalStudents() {
     try {
       const response = await fetch("http://localhost:5000/api/students/total-students");

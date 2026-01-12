@@ -1,11 +1,40 @@
 // ******************************************//
-// ********** Logout **********
+// ********** Logout / Session Expiry **********
 // ******************************************//
+function checkSessionExpiry() {
+  const loginTime = Number(localStorage.getItem("loginTime"));
+  console.log("Checking session...", loginTime, Date.now());
+
+  if (!loginTime) {
+    console.log("No login time found. Redirecting to login.");
+    window.location.href = "/frontend/authentication/student-auth/student-login.html";
+    return;
+  }
+
+  const oneHour = Date.now() + 60 * 60 * 1000; 
+
+  if (Date.now() - loginTime > oneHour) {
+    console.log("Session expired, logging out...");
+    alert("Session expired. You will be logged out.");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("loginTime");
+    window.location.href = "/frontend/authentication/student-auth/student-login.html";
+  }
+}
+
+checkSessionExpiry();
+setInterval(checkSessionExpiry, 1000);
+
+
+
+// Logout button
 const signoutBtn = document.getElementById("signout");
 signoutBtn.addEventListener("click", () => {
   localStorage.removeItem("loggedInUser");
-  window.location.href = "/frontend/authentication/login.html";
+  localStorage.removeItem("loginTime");
+  window.location.href = "/frontend/authentication/student-auth/student-login.html";
 });
+
 // ******************************************//
 // ********** Navbar logic **********
 // ******************************************//
@@ -241,6 +270,88 @@ async function fetchResults(){
   }
 }
 fetchResults();
+// ********************************************************//
+// ************* Print Results Slip **********************
+// ********************************************************//
+document.getElementById("printresultsLink").addEventListener("click",async (e)=>{
+
+  e.preventDefault();
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const regNumber = loggedInUser.reg_number;
+
+  const response = await fetch(`http://localhost:5000/api/results?reg_number=${encodeURIComponent(regNumber)}`);
+  const data = await response.json();
+
+  let rows = "";
+  let totalHours = 0;
+  let totalPoints = 0;
+
+  data.results.forEach(item => {
+    const hours = Number(item.academic_hours);
+    const points = gradePoints(item.grade);
+
+    totalHours += hours;
+    totalPoints += points * hours;
+
+    rows += `
+    <tr>
+      <td>${item.unit_code}</td>
+      <td>${item.unit_name}</td>
+      <td>${item.academic_hours}</td>
+      <td>${item.marks}</td>
+      <td>${item.grade}</td>
+    </tr>
+    `;
+  });
+
+  const gpa = (totalPoints/totalHours).toFixed(2);
+
+  const win = window.open("", "_blank")
+  win.document.write(`
+    <html>
+    <head>
+      <title>Results slip</title>
+      <style>
+        body { font-family: Arial; padding: 30px; }
+        h2 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 8px; }
+        th { background: #eee; }
+        .footer { margin-top: 30px; }
+        .official-stamp{width:100px;}
+      </style>
+    </head>
+    <body>
+        <h2>OFFICIAL ACADEMIC TRANSCRIPT</h2>
+
+        <p><strong>Name:</strong>${loggedInUser.name}</p>
+        <p><strong>Registration No:</strong>${loggedInUser.reg_number}</p>
+        <p><strong>Course:</strong>${loggedInUser.course}</p>
+
+         <table>
+        <tr>
+          <th>Unit Code</th>
+          <th>Unit Name</th>
+          <th>Hours</th>
+          <th>Marks</th>
+          <th>Grade</th>
+        </tr>
+        ${rows}
+      </table>
+
+      <h3>GPA: ${gpa}</h3>
+
+      <div class="footer">
+        <p>Registrar Signature: _____________________</p>
+        <img src="/frontend/images/official stamp.png" alt="" class="official-stamp">
+      </div>
+    </body>
+    </html>
+    `)
+    win.document.close();
+    win.print();
+})
 // ******************************************//
 // ************* Fetch fees **********************
 // ******************************************//
@@ -316,6 +427,79 @@ async function fetchFees() {
 fetchFees();
 
 // ******************************************//
+// ************* Print Fees Statement**********************
+// ******************************************//
+document.getElementById("printFeesLink").addEventListener("click", async (e) => {
+  e.preventDefault(); 
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+  const regNumber = loggedInUser.reg_number;
+
+  const res = await fetch(`http://localhost:5000/api/fees?reg_number=${encodeURIComponent(regNumber)}`);
+  const data = await res.json();
+
+  let rows = "";
+  data.fees.forEach(fee => {
+    rows += `
+      <tr>
+        <td>${new Date(fee.date).toLocaleDateString()}</td>
+        <td>${fee.description}</td>
+        <td>${fee.debits || ""}</td>
+        <td>${fee.credits || ""}</td>
+        <td>${fee.balance}</td>
+      </tr>
+    `;
+  });
+
+  const win = window.open("", "_blank");
+  win.document.write(`
+    <html>
+    <head>
+      <title>Fees Statement</title>
+      <style>
+        body { font-family: Arial; padding: 30px; }
+        h2 { text-align: center; }
+        .header { text-align: center; margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+        th { background: #eee; }
+        .footer { margin-top: 30px; font-size: 14px; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h2>OFFICIAL FEES STATEMENT</h2>
+        <p>Generated by University Student Portal</p>
+      </div>
+
+      <p><strong>Name:</strong> ${loggedInUser.name}</p>
+      <p><strong>Registration No:</strong> ${regNumber}</p>
+      <p><strong>Course:</strong> ${loggedInUser.course}</p>
+
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Debits</th>
+          <th>Credits</th>
+          <th>Balance</th>
+        </tr>
+        ${rows}
+      </table>
+
+      <div class="footer">
+        <p>This is an official fees statement.</p>
+        <p>Finance Office Signature: _____________________</p>
+      </div>
+    </body>
+    </html>
+  `);
+
+  win.document.close();
+  win.print();
+});
+
+// ******************************************//
 // *********** Course registration ***********
 // ******************************************//
 
@@ -332,12 +516,10 @@ document.getElementById("courseForm").addEventListener("submit", async (e) => {
 
   const unitCodeInputs = document.querySelectorAll(".unit-code");
   const groupInputs = document.querySelectorAll(".group");
-  const examInputs = document.querySelectorAll(".examType");
 
   for (let i = 0; i < unitCodeInputs.length; i++) {
     const unit_code = unitCodeInputs[i].value.trim();
     const group = groupInputs[i].value;
-    const exam_type = examInputs[i].value;
 
     if (!unit_code) continue;
 
@@ -348,7 +530,6 @@ document.getElementById("courseForm").addEventListener("submit", async (e) => {
         body: JSON.stringify({
           reg_number: regNumber,
           unit_code,
-          exam_type,
           group
         })
       });
@@ -381,7 +562,6 @@ document.getElementById("courseForm").addEventListener("submit", async (e) => {
       row.innerHTML = `
         <td>${item.unit_code}</td>
         <td>${item.unit_name}</td>
-        <td>${item.exam_type}</td>
         <td>${item.group}</td>
         <td>${item.lecturer}</td>
       `;
@@ -477,7 +657,7 @@ fetchRequest();
 
 
 // =====================
-// THEME TOGGLE SCRIPT
+// THEME TOGGLE
 // =====================
 
 const themeBtn = document.getElementById("themeToggle");
@@ -502,4 +682,5 @@ themeBtn.addEventListener("click", () => {
         themeBtn.textContent = "🌙 Dark Mode";
     }
 });
+
 

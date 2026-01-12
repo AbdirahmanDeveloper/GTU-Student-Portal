@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="student-login.css">
+    <title>GTU Student Portal</title>
+</head>
+<body>
+    <div class="login-container">
+        <form class="login-form" id="loginForm">
+          <h2>Student Portal Login</h2>
+          <div>
+            <label for="username">🎓 Registration Number</label>
+            <input type="text" id="username" name="username" placeholder="Enter Reg No" required>
+          </div>
+          <div>
+            <label for="password">Phone Number</label>
+            <input type="password" id="password" name="password" placeholder="Enter Phone Number" required>
+          </div>
+          <p id="errorMsg" class="error-msg"></p>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+      <script src="student-login.js"></script>
+</body>
+</html>

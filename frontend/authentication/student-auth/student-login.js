@@ -7,7 +7,7 @@ form.addEventListener('submit', async (e) => {
   const phone_number = document.getElementById('password').value.trim();
 
   try {
-    const response = await fetch('http://localhost:5000/api/auth', {
+    const response = await fetch('http://localhost:5000/api/student-auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reg_number, phone_number })
@@ -22,7 +22,8 @@ form.addEventListener('submit', async (e) => {
     }
 
     localStorage.setItem('loggedInUser', JSON.stringify(data.student));
-    window.location.href = '/frontend/student/index.html';
+    localStorage.setItem("loginTime", Date.now());
+    window.location.href = "/frontend/student/index.html";
   } catch (error) {
     console.error('Login error:', error);
     errorMsg.textContent = 'An error occurred. Please try again later.';

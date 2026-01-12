@@ -3,20 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ===== Google Material Symbols ===== -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <!-- ===== Font Awesome Icons ===== -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+    <!-- ===== Admin Panel Styles ===== -->
     <link rel="stylesheet" href="admin.css">
     <title>GTU Admin Panel</title>
+
+    <!-- ===== AUTH CHECK ===== -->
+    <script>
+        // Check if user is logged in; if not, redirect to login page
+        const user = JSON.parse(localStorage.getItem("loggedInUser"));
+        if (!user) {
+            window.location.href = "/frontend/authentication/admin-auth/admin-login.html";
+        }
+    </script>
 </head>
 <body>
+    <!-- ===== HEADER & NAVIGATION ===== -->
     <header>
+        <!-- Sidebar toggle button -->
         <div class="navigation-btn">
             <i class="fa-solid fa-bars"></i>
         </div>
         <nav>
+            <!-- Logo -->
             <div class="logo">
                 <img src="/frontend/images/logo.png" alt="">
             </div>
+            <!-- Navigation links -->
             <ul class="nav-links">
                 <li><a href="#home" class="active active nav-item">HOME</a></li>
                 <li class="dropdown">
@@ -36,15 +52,19 @@
                 <li><a href="#results" class="nav-item">RESULTS</a></li>
                 <li><a href="#courses" class="nav-item">COURSES</a></li>
                 <li><a href="#requests" class="nav-item">REQUESTS</a></li>
-                <li><a href="#">SIGNOUT</a></li>
+                <li><a href="#" id="signOut">SIGNOUT</a></li>
         </ul>
         </nav>
     </header>
+
+    <!-- ===== MAIN CONTENT SECTIONS ===== -->
     <div class="content-sections">
+        <!-- ===== HOME DASHBOARD ===== -->
         <section class="content-section active" id="home">
             <div class="user-details"></div>
             <div class="dashboard">
                 <div class="dashboard-header">
+                    <!-- Card: Total Students -->
                     <div class="header-card students">
                         <h3>Total Students</h3>
                         <hr>
@@ -53,6 +73,7 @@
                             <i class="fa-solid fa-graduation-cap"></i>
                         </div>
                     </div>
+                    <!-- Card: Total Courses -->
                     <div class="header-card courses">
                         <h3>Total Courses</h3>
                         <hr>
@@ -61,6 +82,7 @@
                             <i class="fa-solid fa-book"></i>
                         </div>
                     </div>
+                    <!-- Card: Total Fees -->
                     <div class="header-card fees">
                         <h3>Total Fees</h3>
                         <hr>
@@ -70,6 +92,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- ===== Fees Statistics ===== -->
                 <div class="statistics">
                     <div class="statistics-card">
                         <h2>Fees Overview</h2>
@@ -88,6 +112,7 @@
                         </div>
                         <hr>
                         <div class="card-bottom">
+                            <!-- Progress bar -->
                             <div class="progress-bar" id="feesProgressBar"><span class="progress-fill"></span></div>
                             <apan id="percentage"></apan>
                         </div>
@@ -95,6 +120,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- ===== STUDENTS LIST ===== -->
         <section class="content-section" id="studentsList">
             <table>
                 <thead>
@@ -107,9 +134,12 @@
                 <tbody id="studentsTBody"></tbody>
             </table>
         </section>
+
+        <!-- ===== ADD STUDENT FORM ===== -->
         <section class="content-section" id="Addstudents">
             <form class="new-student-form form" id="insertNewStudent">
                 <h1>Register New Student</h1>
+                <!-- Student fields -->
                 <label for="first-name">Enter First Name</label>
                 <input type="text" id="first-name">
                 <label for="second-name">Enter Second Name</label>
@@ -122,13 +152,15 @@
                 <input type="text" id="mobile-no">
                 <label for="alt-mobile">Enter Alt Mobile</label>
                 <input type="text" id="alt-mobile">
-                <label for="national-id">Enter NAtional Id</label>
+                <label for="national-id">Enter National Id</label>
                 <input type="text" id="national-id">
                 <label for="course">Enter Course</label>
                 <input type="text" id="course">
                 <button>REGISTER</button>
             </form>
         </section>
+
+        <!-- ===== FEES FORM ===== -->
         <section class="content-section" id="fees">
             <form class="fees-insert-form form" id="fees-insert-form">
                 <h1>Insert Fees</h1>
@@ -141,6 +173,8 @@
                 <button>UPDATE</button>
             </form>             
         </section>
+
+        <!-- ===== TIMETABLES SECTION ===== -->
         <section class="content-section" id="timetables">
             <table>
                 <thead>
@@ -154,15 +188,18 @@
                 </thead>
                 <tbody id="timetableTAbleBody"></tbody>
             </table>
-            
         </section>
+
+        <!-- ===== EDIT TIMETABLES ===== -->
         <section class="content-section timetable" id="edit-timetable">
+            <!-- Remove Unit Form -->
             <form id="removeUnit" class="form">
                 <h1>Remove Units</h1>
                 <label for="unit-code">Enter Unit Code:</label>
                 <input type="text" id="remove-unit-code">
                 <button>Save Changes</button>
             </form>
+            <!-- Add Unit Form -->
             <form id="addUnit" class="form">
                 <h1>Add Unit</h1>
                 <label for="add-unit-code">Enter Unit Code:</label>
@@ -180,6 +217,8 @@
                 <button>Save Changes</button>
             </form>
         </section>
+
+        <!-- ===== RESULTS FORM ===== -->
         <section class="content-section" id="results">
             <form id="resultsForm" class="form">
                 <h1>Add Result</h1>
@@ -198,6 +237,8 @@
                 <button>Save Changes</button>
             </form>
         </section>
+
+        <!-- ===== COURSES SECTION ===== -->
         <section class="content-section" id="courses">
             <table id="course-table">
                 <thead>
@@ -209,6 +250,8 @@
                 <tbody id="courses-tBody"></tbody>
             </table>
         </section>
+
+        <!-- ===== REQUESTS SECTION ===== -->
         <section class="content-section" id="requests">
             <form id="request-form">
                 <table id="request-table">
@@ -226,6 +269,8 @@
             </form>
         </section>
     </div>
+
+    <!-- ===== ADMIN JS ===== -->
     <script src="admin.js"></script>
 </body>
 </html>
